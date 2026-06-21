@@ -1,0 +1,15 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden; /* Drops any unwanted layout scrollbars completely */
+    position: relative;
+    background-color: #000; /* Standard fallback game background black */
+}
+
+img {
+    /* Ensures user-drag actions don't break game focus loops */
+    user-select: none;
+    -webkit-user-drag: none; 
+}
