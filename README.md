@@ -1,169 +1,147 @@
 # AJS Engine
 
-> Lightweight JavaScript 2D Game Engine
-
-AJS is a simple game engine built for creating 2D browser games using pure JavaScript. It focuses on ease of use, rapid prototyping, and a minimal API.
+A lightweight JavaScript 2D game engine for fast prototyping using DOM rendering.
 
 ---
 
-## Features
+# 📁 Project Structure
 
-* Sprite Rendering
-* Delta Time Game Loop
-* AABB Collision Detection
-* Keyboard Input
-* Audio Support
-* UI System
-* Event System
-* Rotation Support
-* Procedural Generation
-* Object Destruction
+```
+game/
+│
+├── assets/          # Images, sounds, etc.
+├── module/
+│   └── AJS/        # Engine core
+│       ├── AJS.js
+│       ├── audio.js
+│       ├── gui.js
+│       └── render.js
+│
+├── styles/
+├── views/
+│   └── main.html
+│
+├── world/          # Game logic
+│   └── main.js
+│
+└── main.js         # Entry point
+```
 
 ---
 
-## Quick Example
+# 🚀 Getting Started
+
+## 1. Open the project
+
+Open:
+
+```
+views/main.html
+```
+
+Make sure it loads `main.js`.
+
+---
+
+## 2. Import the engine
+
+In `world/main.js` or `main.js`:
 
 ```js
-import { ajs, Keys } from "./ajs.js";
-import { runner } from "./runner.js";
+import { ajs, Keys } from "../module/AJS/AJS.js";
+import { audio } from "../module/AJS/audio.js";
+import { ui } from "../module/AJS/gui.js";
+import { runner } from "../module/AJS/render.js";
+```
 
+---
+
+# 🎮 Create a Game Instance
+
+```js
 const engine = new ajs(document.body);
-const gameLoop = new runner();
+const loop = new runner();
+const keys = new Keys();
+```
 
+---
+
+# 🧍 Sprites
+
+```js
 const player = engine.img(
-    "player.png",
+    "./assets/player.png",
     100,
     100,
     64,
     64
 );
+```
 
-const keys = new Keys();
+Move sprite:
 
-keys.keybind("d", () => {
-    player.setPosition(
-        player.x + 10,
-        player.y
-    );
+```js
+player.setPosition(player.x + 10, player.y);
+```
+
+---
+
+# ⌨️ Input
+
+```js
+keys.keybind("w", () => {
+    player.setPosition(player.x, player.y - 10);
 }, "keydown");
+```
 
-gameLoop.render((dt) => {
+---
+
+# 🎯 Game Loop
+
+```js
+loop.render((dt) => {
+
     player.setPosition(
         player.x + 100 * dt,
         player.y
     );
+
 });
 ```
 
 ---
 
-## Installation
-
-Clone the repository:
-
-```bash
-git clone https://github.com/yourusername/ajs-engine.git
-```
-
-Import the modules:
+# 💥 Collision
 
 ```js
-import { ajs, Keys } from "./ajs.js";
-import { runner } from "./runner.js";
-import { audio } from "./audio.js";
-import { ui } from "./ui.js";
-```
-
----
-
-## Creating Sprites
-
-```js
-const player = engine.img(
-    "player.png",
-    100,
-    100,
-    64,
-    64
-);
-```
-
-Move a sprite:
-
-```js
-player.setPosition(300, 200);
-```
-
----
-
-## Collision Detection
-
-```js
-if(engine.collision(player, enemy)){
-    console.log("Collision");
+if (engine.collision(player, enemy)) {
+    console.log("Collision detected");
 }
 ```
 
 ---
 
-## Keyboard Input
+# 🔊 Audio
 
 ```js
-const keys = new Keys();
+const soundSystem = new audio();
 
-keys.keybind(
-    "w",
-    () => {
-        player.setPosition(
-            player.x,
-            player.y - 10
-        );
-    },
-    "keydown"
-);
+const shoot = soundSystem.loadSound("./assets/shoot.mp3");
+
+soundSystem.playSound(shoot);
 ```
 
 ---
 
-## Audio
-
-Load audio:
-
-```js
-const sounds = new audio();
-
-const laser = sounds.loadSound(
-    "laser.mp3"
-);
-```
-
-Play audio:
-
-```js
-sounds.playSound(laser);
-```
-
-Stop audio:
-
-```js
-sounds.stopSound(laser);
-```
-
----
-
-## UI
-
-Create text:
+# 🖥 UI
 
 ```js
 const uiSystem = new ui();
 
-uiSystem.createTextUI(
-    "Score: 0"
-);
+uiSystem.createTextUI("Score: 0");
 ```
 
-Create a button:
+Button:
 
 ```js
 uiSystem.createButtonUI(
@@ -171,48 +149,33 @@ uiSystem.createButtonUI(
     "50%",
     "50%",
     () => {
-        console.log("Start");
+        console.log("Game started");
     }
 );
 ```
 
 ---
 
-## Events
-
-Send an event:
+# 🧹 Destroy Objects
 
 ```js
-engine.fireFiles(
-    "enemyDefeated",
-    {
-        score: 100
-    }
-);
-```
-
-Receive an event:
-
-```js
-engine.Onrecieve(
-    "enemyDefeated",
-    (data) => {
-        console.log(data.score);
-    }
-);
+engine.destroy(player);
 ```
 
 ---
 
-## Game Loop
+# 📦 Minimal Example Game
 
 ```js
+const engine = new ajs(document.body);
 const loop = new runner();
 
-loop.render((dt, elapsed) => {
+const player = engine.img("./assets/player.png", 100, 100, 64, 64);
+
+loop.render((dt) => {
 
     player.setPosition(
-        player.x + 200 * dt,
+        player.x + 120 * dt,
         player.y
     );
 
@@ -221,49 +184,29 @@ loop.render((dt, elapsed) => {
 
 ---
 
-## Destroy Objects
+# ⚙️ Notes
 
-```js
-engine.destroy(player);
-```
-
----
-
-## Philosophy
-
-AJS was designed around three principles:
-
-* Simple API
-* Fast Prototyping
-* Pure JavaScript
-
-No visual editor.
-
-No complicated setup.
-
-Just build games.
+* Uses DOM rendering (`<img>`)
+* Performance depends on number of elements
+* Best for small 2D games / prototypes
 
 ---
 
-## Roadmap
+# 🧭 Roadmap
 
-### Version 1.1
-
-* Scene Management
-* Camera System
-* Asset Preloader
-
-### Version 1.2
-
-* Sprite Animations
+* Scene system
+* Camera system
+* Asset loader
+* Sprite animations
 * Tilemaps
-* Particle Effects
+* Particle system
 
-### Version 2.0
+---
 
-* Physics System
-* Advanced Rendering
-* Plugin Support
+# 📜 License
+
+MIT
+
 
 ---
 
